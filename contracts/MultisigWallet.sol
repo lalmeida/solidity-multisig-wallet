@@ -5,6 +5,8 @@ pragma solidity 0.8.13;
  * This Smart Contract implements a Multisig Wallet.
  * Any user can deposit money from his account.
  * But withdrawls require n-of-N approvals to go through.
+ * 
+ * Todo: Remove redundancy from Owner and Balance 
  */
 contract MultisigWallet {
 
@@ -13,14 +15,13 @@ contract MultisigWallet {
     event TransferApproved (address recipient,uint amount, address approver);
 
     /** owners of the wallet*/
-    mapping (address => bool) private ownersMap;
     address[] private ownersList;
 
     uint private numberOfRequiredApprovals;
 
     /** 
-    * transferRequests[recipientAddress][amount][ownerAddress] = true if owner has approved transaction,
-    *                                                         = false, otherwise.
+    * transferRequests[recipientAddress][amount][approverAddress] = true if approverAddress has approved transaction,
+    *                                                             = false, otherwise.
     */
     mapping (address => mapping (uint => mapping (address => bool))) private transferRequests;
 
@@ -109,14 +110,20 @@ contract MultisigWallet {
         return (balance);
     } 
 
+    
     function isOwner (address _address) private view returns (bool)  {
-        return ownersMap[_address];
+        /** this array iteration can be avoided with we use an aditional mapping */
+        for (uint i = 0; i< ownersList.length; i++) {
+            if (ownersList[i] == _address) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function addOwner(address _address) private {
-        if(ownersMap[_address] == false) {
+        if( !isOwner(_address) ) {
             ownersList.push(_address);
-            ownersMap[_address] = true;
         }
     }
 
