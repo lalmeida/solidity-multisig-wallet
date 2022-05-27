@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
-
 /**
  * This Smart Contract implements a Multisig Wallet.
  * Any user can deposit money from his account.
@@ -61,7 +60,7 @@ contract MultisigWallet {
 
     /**
     * Remix input (example):
-    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1000000000000000000
+    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1000000000000000010
     */
     function approveTransferRequest(address recipient, uint amount) external onlyOwner {
         transferRequests[recipient][amount][msg.sender]=true;
@@ -120,6 +119,5 @@ contract MultisigWallet {
             ownersMap[_address] = true;
         }
     }
-
 
 }
