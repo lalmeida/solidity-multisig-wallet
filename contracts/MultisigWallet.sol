@@ -9,6 +9,8 @@ pragma solidity 0.8.13;
  */
 contract MultisigWallet {
 
+    event Transfer (address recipient,uint amount, string description);
+
     /** owners of the wallet*/
     mapping (address => bool) private ownersMap;
     address[] private ownersList;
@@ -54,9 +56,10 @@ contract MultisigWallet {
     }
 
     /**
-    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1
+    * Remix input (example):
+    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1000000000000000000
     */
-    function approveTransferRequest(address recipient, uint amount) external payable onlyOwner {
+    function approveTransferRequest(address recipient, uint amount) external onlyOwner {
         transferRequests[recipient][amount][msg.sender]=true;
         if (haveEnoughApprovals(recipient, amount)){
             transfer( payable(recipient), amount);
@@ -83,8 +86,11 @@ contract MultisigWallet {
     function transfer (address payable recipient, uint amount) private {
         require(balance >= amount);
         require(balance - amount < balance);
+        emit Transfer(recipient, amount, "Transfer taking place.");
         balance-=amount;
+        emit Transfer(recipient, amount, "p2");
         recipient.transfer(amount);
+        emit Transfer(recipient, amount, "p3");
     }
 
     function getBalance() external view returns (uint , uint) {
