@@ -6,7 +6,7 @@ pragma solidity 0.8.13;
  * Any user can deposit money from his account.
  * But withdrawls require n-of-N approvals to go through.
  * 
- * Todo: Remove redundancy from Owner and Balance 
+ * Todo: Remove redundancy from Balance 
  */
 contract MultisigWallet {
 
