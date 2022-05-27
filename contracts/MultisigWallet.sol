@@ -6,7 +6,7 @@ pragma solidity 0.8.13;
  * Any user can deposit money from his account.
  * But withdrawls require n-of-N approvals to go through.
  * 
- * Todo: Remove redundancy from Balance 
+ *  
  */
 contract MultisigWallet {
 
@@ -24,9 +24,6 @@ contract MultisigWallet {
     *                                                             = false, otherwise.
     */
     mapping (address => mapping (uint => mapping (address => bool))) private transferRequests;
-
-    /** Wallet´s balance */
-    uint private balance;
 
     modifier onlyOwner {
         require ( isOwner(msg.sender), "Only the owners of the wallet can perform this operation." );
@@ -91,25 +88,17 @@ contract MultisigWallet {
     }
 
     function deposit () external payable onlyOwner {
-        require (balance + msg.value > balance);
-        balance+=msg.value;
-        assert(balance == address(this).balance);
     }
 
     function transfer (address payable recipient, uint amount) private {
-        require(balance >= amount);
-        require(balance - amount < balance);
-        assert(balance == address(this).balance);
-        balance-=amount;
+        require(address(this).balance >= amount);
         recipient.transfer(amount);
         emit TransferExecuted(recipient, amount);
     }
 
     function getBalance() external view returns (uint) {
-        assert(balance == address(this).balance);
-        return (balance);
+        return (address(this).balance);
     } 
-
     
     function isOwner (address _address) private view returns (bool)  {
         /** this array iteration can be avoided if we use an aditional mapping */
