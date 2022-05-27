@@ -24,6 +24,12 @@ contract MultisigWallet {
     * 
     * transferRequests[recipientAddress][amount][approverAddress] = true if approverAddress has approved transaction,
     *                                                             = false, otherwise.
+    *
+    * We could replace this mapping with an array of TransferRequest´s and 
+    *   a  mapping[approverAddress][transferRequestIndex] => approvedStatus (bool)
+    * 
+    * The (new) TransferRequest struct would hold the recipientAddress & amount. 
+    * 
     */
     mapping (address => mapping (uint => mapping (address => bool))) private transferRequests;
 
