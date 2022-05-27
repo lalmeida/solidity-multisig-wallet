@@ -112,7 +112,7 @@ contract MultisigWallet {
 
     
     function isOwner (address _address) private view returns (bool)  {
-        /** this array iteration can be avoided with we use an aditional mapping */
+        /** this array iteration can be avoided if we use an aditional mapping */
         for (uint i = 0; i< ownersList.length; i++) {
             if (ownersList[i] == _address) {
                 return true;
