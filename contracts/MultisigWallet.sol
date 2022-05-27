@@ -78,7 +78,7 @@ contract MultisigWallet {
         }
     }
 
-    function haveEnoughApprovals (address recipient, uint amount) public view returns (bool) {
+    function haveEnoughApprovals (address recipient, uint amount) private view returns (bool) {
         return (getCurrentNumberOfApprovals(recipient, amount) >= numberOfRequiredApprovals);
     }
 
