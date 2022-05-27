@@ -20,6 +20,8 @@ contract MultisigWallet {
     uint private numberOfRequiredApprovals;
 
     /** 
+    * Data Structure holding pending transfers and their approvals. 
+    * 
     * transferRequests[recipientAddress][amount][approverAddress] = true if approverAddress has approved transaction,
     *                                                             = false, otherwise.
     */
@@ -33,7 +35,7 @@ contract MultisigWallet {
     /**
     * Constructor.
     * 
-    * Where:
+    * Parameters:
     *    param _otherOwners: owners of this wallet (other than the msg.sender).
     *    param _numberOfRequiredApprovals: number of approvals required to spend (transfer) wallet´s funds. 
     * 
@@ -57,10 +59,17 @@ contract MultisigWallet {
     }
 
     /**
+    * Owners of the wallet should call this method to propose or authorize a transfer.
+    * 
+    * Parameters: 
+    *    recipient: recipient address
+    *    amount: amount to be transferred
+    * 
     * Remix input (example):
-    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1000000000000000010
+    *    0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1000000000000000010
+    * 
     */
-    function approveTransferRequest(address recipient, uint amount) external onlyOwner {
+    function approveTransfer(address recipient, uint amount) external onlyOwner {
         transferRequests[recipient][amount][msg.sender]=true;
         emit TransferApproved(recipient, amount, msg.sender);
         if (haveEnoughApprovals(recipient, amount)){
