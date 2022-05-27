@@ -33,6 +33,10 @@ contract MultisigWallet {
     * Remix deployment syntax: 
     *    ["<address_0>","<address_1>",...,"<address_n>"], <uint>
     * 
+    * Where:
+    *   The wallet owners will be: the address deploying the contract plus the addresses passed as the first argument.
+    *   The number of required approvals is given as the second argument. 
+    * 
     *  For example:
     *    ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2","0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"] , 2
     *
