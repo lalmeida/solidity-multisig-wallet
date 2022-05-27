@@ -25,7 +25,7 @@ contract MultisigWallet {
     uint private balance;
 
     modifier onlyOwner {
-        require ( isOwner(msg.sender) );
+        require ( isOwner(msg.sender), "Only the owners of the wallet can perform this operation." );
         _;
     }
 
@@ -53,21 +53,26 @@ contract MultisigWallet {
 
     }
 
-    function approveTransferRequest(address recipient, uint amount) external onlyOwner {
+    /**
+    * 0xdD870fA1b7C4700F2BD7f44238821C26f7392148,1
+    */
+    function approveTransferRequest(address recipient, uint amount) external payable onlyOwner {
         transferRequests[recipient][amount][msg.sender]=true;
         if (haveEnoughApprovals(recipient, amount)){
             transfer( payable(recipient), amount);
         }
     }
 
-    function haveEnoughApprovals (address recipient, uint amount) private view returns (bool) {
-        uint approvals = 0;
+    function haveEnoughApprovals (address recipient, uint amount) public view returns (bool) {
+        return (getCurrentNumberOfApprovals(recipient, amount) >= numberOfRequiredApprovals);
+    }
+
+    function getCurrentNumberOfApprovals (address recipient, uint amount) public view returns (uint approvals) {
         for (uint i = 0; i < ownersList.length; i++) {
             if (transferRequests[recipient][amount][ownersList[i]] == true) {
                 approvals++;
             }
         }
-        return (approvals >= numberOfRequiredApprovals);
     }
 
     function deposit () external payable onlyOwner {
@@ -82,6 +87,9 @@ contract MultisigWallet {
         recipient.transfer(amount);
     }
 
+    function getBalance() external view returns (uint , uint) {
+        return (balance, address(this).balance );
+    } 
 
     function isOwner (address _address) private view returns (bool)  {
         return ownersMap[_address];
