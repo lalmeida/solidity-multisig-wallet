@@ -88,9 +88,7 @@ contract MultisigWallet {
         require(balance - amount < balance);
         emit Transfer(recipient, amount, "Transfer taking place.");
         balance-=amount;
-        emit Transfer(recipient, amount, "p2");
         recipient.transfer(amount);
-        emit Transfer(recipient, amount, "p3");
     }
 
     function getBalance() external view returns (uint , uint) {
