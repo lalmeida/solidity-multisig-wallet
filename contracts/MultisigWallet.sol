@@ -34,14 +34,16 @@ contract MultisigWallet {
     }
 
     /**
+    * Constructor.
+    * 
+    * Where:
+    *    param _otherOwners: owners of this wallet (other than the msg.sender).
+    *    param _numberOfRequiredApprovals: number of approvals required to spend (transfer) wallet´s funds. 
+    * 
     * Remix deployment syntax: 
     *    ["<address_0>","<address_1>",...,"<address_n>"], <uint>
     * 
-    * Where:
-    *   The wallet owners will be: the address deploying the contract plus the addresses passed as the first argument.
-    *   The number of required approvals is given as the second argument. 
-    * 
-    *  For example:
+    * For example:
     *    ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2","0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"] , 2
     *
     */
@@ -65,6 +67,7 @@ contract MultisigWallet {
         transferRequests[recipient][amount][msg.sender]=true;
         emit TransferApproved(recipient, amount, msg.sender);
         if (haveEnoughApprovals(recipient, amount)){
+            clearApprovals(recipient, amount);
             transfer( payable(recipient), amount);
         }
     }
@@ -78,6 +81,12 @@ contract MultisigWallet {
             if (transferRequests[recipient][amount][ownersList[i]] == true) {
                 approvals++;
             }
+        }
+    }
+
+   function clearApprovals (address recipient, uint amount) private {
+        for (uint i = 0; i < ownersList.length; i++) {
+            transferRequests[recipient][amount][ownersList[i]] = false;
         }
     }
 
