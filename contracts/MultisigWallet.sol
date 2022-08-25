@@ -38,10 +38,12 @@ contract MultisigWallet {
         _;
     }
 
-    constructor() {}
+    constructor() {
+          addOwner(msg.sender);
+    }
 
     /**
-    * Initializes.
+    * Initializes the Wallet.
     * 
     * Parameters:
     *    param _otherOwners: owners of this wallet (other than the msg.sender).
@@ -59,7 +61,6 @@ contract MultisigWallet {
 
         numberOfRequiredApprovals = _numberOfRequiredApprovals;
         
-        addOwner(msg.sender);
         for (uint i=0 ; i < _otherOwners.length; i++) {
             addOwner(_otherOwners[i]);    
         }
